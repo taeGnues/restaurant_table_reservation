@@ -16,17 +16,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @AuditOverride(forClass = BaseEntity.class)
-public class Customer extends BaseEntity {
+public class Restaurant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String username; // 이메일 값.
-    private String password;
-    private String phone;
     private String name;
+    private String position;
+    private String description;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
 }
