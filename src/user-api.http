@@ -1,0 +1,17 @@
+### 회원가입 (유저)
+POST http://localhost:8080/auth/customer-signin
+Content-Type: application/json
+
+{
+  "username": "hi563@naver.com",
+  "password": "1234",
+  "name": "정태승",
+  "phone": "01084204241",
+  "role": "CUSTOMER"
+}
+
+### 로그인
+
+### 인증인가 확인용
+GET http://localhost:8080/hello
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJoaTU2M0BuYXZlci5jb20iLCJyb2xlcyI6WyJNQU5BR0VSIl0sImlhdCI6MTcxNzI1MTMxMSwiZXhwIjoxNzE3MjU0OTExfQ.9T6RQfY4mcVpAs-MZxdPatTjzin5waR_MYyeepSJ4aY6ngw_kw83skV6MuZlIGLM
