@@ -9,7 +9,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: true
     defer-datasource-initialization: true
 
@@ -21,7 +21,6 @@ spring:
 
   jwt:
     secret: ZGF5b25lLXNwcmluZy1ib290LWRpdmlkZW5kLXByb2plY3QtdHV0b3JpYWwtand0LXNlY3JldC1rZXkK
-
 
 #  datasource:
 #    driver-class-name: org.h2.Driver

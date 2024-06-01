@@ -11,7 +11,9 @@ Framework : Spring Boot 3.3.0
 Build : Gradle
 Database : MySQL
 
-오픈 라이브러리
+기타
+인증/인가 구현 : Spring Security
+데이터 유효성 검증 : Java Bean Validation
 ```
 
 ### 주요 기능
