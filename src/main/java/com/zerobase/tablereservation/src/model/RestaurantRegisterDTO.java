@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 @Builder
 public class RestaurantRegisterDTO {
+
+    private Long id;
     private String name;
     private String position;
     private String description;
@@ -21,6 +23,7 @@ public class RestaurantRegisterDTO {
 
     public static RestaurantRegisterDTO fromEntity(Restaurant restaurant){
         return RestaurantRegisterDTO.builder()
+                .id(restaurant.getId())
                 .name(restaurant.getName())
                 .position(restaurant.getPosition())
                 .description(restaurant.getDescription())
