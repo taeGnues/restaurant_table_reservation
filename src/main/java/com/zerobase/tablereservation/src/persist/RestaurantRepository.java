@@ -11,7 +11,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     Optional<Restaurant> findByManager_Id(Long id);
 
-    void deleteByManager_Id(Long userId);
-
     List<Restaurant> findAllByNameContains(String keyword, Pageable pageable);
 }

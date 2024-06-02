@@ -1,12 +1,12 @@
 package com.zerobase.tablereservation.src.service;
 
+import com.zerobase.tablereservation.src.model.RestaurantRegisterDTO;
 import com.zerobase.tablereservation.src.persist.ManagerRepository;
 import com.zerobase.tablereservation.src.persist.ReservationRepository;
 import com.zerobase.tablereservation.src.persist.RestaurantRepository;
-import com.zerobase.tablereservation.src.persist.ReviewRepository;
 import com.zerobase.tablereservation.src.persist.entity.Manager;
 import com.zerobase.tablereservation.src.persist.entity.Restaurant;
-import com.zerobase.tablereservation.src.model.RestaurantRegisterDTO;
+import com.zerobase.tablereservation.src.model.RestaurantDTO;
 import com.zerobase.tablereservation.src.model.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,12 +53,12 @@ public class RestaurantService {
     /*
     자신의 식당 조회하기 (UserVO 기반)
      */
-    public RestaurantRegisterDTO readRestaurant() {
+    public RestaurantDTO readRestaurant() {
         UserVO userVO = authService.getCurrentUserVO();
         Restaurant restaurant = restaurantRepository.findByManager_Id(userVO.getUserId()).orElseThrow(
                 () -> new IllegalStateException("해당 유저가 갖고 있는 식당은 없습니다."));
 
-        return RestaurantRegisterDTO.fromEntity(restaurant);
+        return RestaurantDTO.fromEntity(restaurant);
     }
 
 
