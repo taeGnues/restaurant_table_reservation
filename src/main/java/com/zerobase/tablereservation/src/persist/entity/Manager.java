@@ -1,4 +1,4 @@
-package com.zerobase.tablereservation.src.domain.entity;
+package com.zerobase.tablereservation.src.persist.entity;
 
 
 import com.zerobase.tablereservation.common.entity.BaseEntity;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @AuditOverride(forClass = BaseEntity.class)
-public class Customer extends BaseEntity implements UserDetails {
+public class Manager extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +32,6 @@ public class Customer extends BaseEntity implements UserDetails {
     private String phone;
     private String name;
 
-    @Builder.Default
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
@@ -42,4 +41,5 @@ public class Customer extends BaseEntity implements UserDetails {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+
 }

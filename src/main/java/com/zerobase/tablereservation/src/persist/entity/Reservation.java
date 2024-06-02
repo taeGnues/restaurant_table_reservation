@@ -1,4 +1,4 @@
-package com.zerobase.tablereservation.src.domain.entity;
+package com.zerobase.tablereservation.src.persist.entity;
 
 import com.zerobase.tablereservation.common.entity.BaseEntity;
 import jakarta.persistence.*;

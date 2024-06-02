@@ -40,7 +40,9 @@ public class SecurityConfig {
                     auth -> auth
                             .requestMatchers("/auth/**").permitAll()
                             .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
-//                            .requestMatchers("/hello/**").hasAuthority("MANAGER") test용 지울것.
+                            .requestMatchers("/hello/**").hasAuthority("MANAGER")// test용 지울것.
+                            .requestMatchers("/restaurant-manage/**").hasAuthority("MANAGER")
+                            .requestMatchers("/restaurant-search/**").permitAll()
                             .anyRequest().denyAll()
 
             ).addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

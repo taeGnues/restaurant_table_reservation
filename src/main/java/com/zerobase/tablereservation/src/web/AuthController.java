@@ -23,10 +23,6 @@ public class AuthController {
     private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping
-    public ResponseEntity<?> hello(){
-        return ResponseEntity.ok("Hello World");
-    }
     /*
     회원 가입
      */

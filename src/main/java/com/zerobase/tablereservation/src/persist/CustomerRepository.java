@@ -1,6 +1,6 @@
-package com.zerobase.tablereservation.src.domain;
+package com.zerobase.tablereservation.src.persist;
 
-import com.zerobase.tablereservation.src.domain.entity.Customer;
+import com.zerobase.tablereservation.src.persist.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
