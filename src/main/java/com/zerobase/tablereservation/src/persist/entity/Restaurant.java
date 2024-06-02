@@ -1,4 +1,5 @@
-package com.zerobase.tablereservation.src.domain.entity;
+package com.zerobase.tablereservation.src.persist.entity;
+
 
 import com.zerobase.tablereservation.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -12,15 +13,20 @@ import org.hibernate.envers.AuditOverride;
 @NoArgsConstructor
 @AllArgsConstructor
 @AuditOverride(forClass = BaseEntity.class)
-public class Review extends BaseEntity{
+public class Restaurant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
+    private String name;
+    private String position;
+    private String description;
 
     @OneToOne
-    @JoinColumn(name="reservation_id")
-    private Reservation reservation;
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
 
+    public void designateManager(Manager manager){
+        this.manager = manager;
+    }
 }

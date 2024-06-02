@@ -17,20 +17,19 @@ Database : MySQL
 ```
 
 ### 주요 기능
-
-| 기능                                  | 권한     |
-|:------------------------------------|--------|
-| 고객 회원가입 및 로그인                       | 비회원    |
-| 점장 회원가입 및 로그인                       | 비회원    |
-| 상점 검색 및 상세 검색                       | 고객     |
-| 예약 등록                               | 고객     |
-| (개인) 예약 조회                          | 고객     |
-| 예약 이용 후 리뷰 등록 및 수정                  | 고객     |
-| 상점 등록/조회/수정/제거                      | 점장     |
-| 예약 수정(예약 후 손님이 10분전에 도착해서 도착 확인 가능) | 점장     |
-| 예약 제거                               | 점장     |
-| 매장에 등록된 모든 예약 조회                    | 점장     |
-| 리뷰 삭제                               | 고객, 점장 |
+| 기능                                  | 권한     | 구현현황 |
+|:------------------------------------|--------|:---:|
+| 고객 회원가입 및 로그인                       | 비회원    |  O  |
+| 점장 회원가입 및 로그인                       | 비회원    |  O  |
+| 상점 검색 및 상세 검색                       | 고객     |     |
+| 예약 등록                               | 고객     |     |
+| (개인) 예약 조회                          | 고객     |     |
+| 예약 이용 후 리뷰 등록 및 수정                  | 고객     |     |
+| 상점 등록/조회/수정/제거                      | 점장     |     |
+| 예약 수정(예약 후 손님이 10분전에 도착해서 도착 확인 가능) | 점장     |     |
+| 예약 제거                               | 점장     |     |
+| 매장에 등록된 모든 예약 조회                    | 점장     |     |
+| 리뷰 삭제                               | 고객, 점장 |     |
 
 ### ERD
 
@@ -74,9 +73,13 @@ api-server-spring-boot
   > src.main.java.com.example.demo
     > common
       > config
+        | AppConfig.java
+        | SecurityConfig // Web Security 관련 설정 (CORS 설정 포함)
         | RestTemplateConfig.java // HTTP get,post 요청을 날릴때 일정한 형식에 맞춰주는 template
         | SwaggerConfig.java // Swagger 관련 설정
-        | WebConfig.java // Web 관련 설정(CORS 설정 포함)
+      > constant // 상수 보관 패키지
+        | Auth
+        | Authority
       > entity
         | BaseEntity.java // create, update, state 등 Entity에 공통적으로 정의되는 변수를 정의한 BaseEntity
       > exceptions
@@ -91,7 +94,6 @@ api-server-spring-boot
         | BaseResponseStatus.java // Controller, Service에서 사용할 Response Status 관리 클래스 
       > secret
         | Secret.java // jwt 암호키 보관 클래스
-      | Constant // 상수 보관 클래스
     > src
       > board // 게시물 관련(피드, 댓글, 신고)
         > entity

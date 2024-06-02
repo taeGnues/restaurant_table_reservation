@@ -2,17 +2,21 @@ package com.zerobase.tablereservation.src.service;
 
 import com.zerobase.tablereservation.common.constant.Auth;
 import com.zerobase.tablereservation.common.constant.Authority;
-import com.zerobase.tablereservation.src.domain.CustomerRepository;
-import com.zerobase.tablereservation.src.domain.ManagerRepository;
-import com.zerobase.tablereservation.src.domain.entity.Customer;
-import com.zerobase.tablereservation.src.domain.entity.Manager;
+import com.zerobase.tablereservation.src.persist.CustomerRepository;
+import com.zerobase.tablereservation.src.persist.ManagerRepository;
+import com.zerobase.tablereservation.src.persist.entity.Customer;
+import com.zerobase.tablereservation.src.persist.entity.Manager;
+import com.zerobase.tablereservation.src.model.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +87,37 @@ public class AuthService implements UserDetailsService {
         return manager;
     }
 
+    /*
+     현재 등록된 유저 정보 가져오기 (UserVO, - userId와 userName)
+     */
+    public UserVO getCurrentUserVO() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!ObjectUtils.isEmpty(authentication) && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                var name = ((UserDetails) principal).getUsername();
+                var userdetails = loadUserByUsername(name);
+                if (userdetails instanceof Customer){
+                    return UserVO.builder()
+                            .userId(((Customer) userdetails).getId())
+                            .username(name)
+                            .build();
+                }
+
+                if (userdetails instanceof Manager){
+                    return UserVO.builder()
+                            .userId(((Manager) userdetails).getId())
+                            .username(name)
+                            .build();
+                }
+            }
+        }
+        throw new IllegalStateException("현재 로그인을 하지 않았거나 유저 정보가 존재하지 않습니다.");
+    }
+
+    /*
+       username으로 정보 가져오기.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Customer> customerOptional = customerRepository.findByUsername(username);
