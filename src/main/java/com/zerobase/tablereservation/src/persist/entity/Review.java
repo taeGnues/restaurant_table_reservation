@@ -19,8 +19,7 @@ public class Review extends BaseEntity{
 
     private String content;
 
-    @OneToOne
-    @JoinColumn(name="reservation_id")
+    @OneToOne(mappedBy = "review", fetch = FetchType.LAZY)
     private Reservation reservation;
 
 }

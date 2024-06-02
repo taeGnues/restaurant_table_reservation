@@ -2,6 +2,7 @@ package com.zerobase.tablereservation.src.persist.entity;
 
 
 import com.zerobase.tablereservation.common.entity.BaseEntity;
+import com.zerobase.tablereservation.src.model.RestaurantRegisterDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.AuditOverride;
@@ -28,5 +29,10 @@ public class Restaurant extends BaseEntity {
 
     public void designateManager(Manager manager){
         this.manager = manager;
+    }
+    public void update(RestaurantRegisterDTO dto){
+        this.name = dto.getName();
+        this.position = dto.getPosition();
+        this.description = dto.getDescription();
     }
 }
