@@ -1,7 +1,6 @@
 package com.zerobase.tablereservation.src.web;
 
 import com.zerobase.tablereservation.src.model.RestaurantRegisterDTO;
-import com.zerobase.tablereservation.src.persist.entity.Restaurant;
 import com.zerobase.tablereservation.src.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

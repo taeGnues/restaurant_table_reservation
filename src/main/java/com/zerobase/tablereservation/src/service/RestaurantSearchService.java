@@ -1,10 +1,11 @@
 package com.zerobase.tablereservation.src.service;
 
 import com.zerobase.tablereservation.src.persist.RestaurantRepository;
-import com.zerobase.tablereservation.src.model.RestaurantRegisterDTO;
+import com.zerobase.tablereservation.src.model.RestaurantDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,30 +21,38 @@ public class RestaurantSearchService {
     /*
     등록된 모든 식당 조회
      */
-    public List<RestaurantRegisterDTO> findAllRestaurants(){
+    public List<RestaurantDTO> findAllRestaurants(){
         return restaurantRepository.findAll()
-                .stream().map(RestaurantRegisterDTO::fromEntity)
+                .stream().map(RestaurantDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    public List<RestaurantRegisterDTO> findAllRestaurantsByKeyword(String keyword, int pageNo) {
+    public List<RestaurantDTO> findAllRestaurantsByKeyword(String keyword, int pageNo) {
         Pageable limit = PageRequest.of(pageNo, 10);
         return restaurantRepository.findAllByNameContains(keyword, limit)
-                .stream().map(RestaurantRegisterDTO::fromEntity)
+                .stream().map(RestaurantDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    public List<RestaurantRegisterDTO> findAllRestaurantsByPaging(int pageNo) {
+    public List<RestaurantDTO> findAllRestaurantsByPaging(int pageNo) {
         Pageable limit = PageRequest.of(pageNo, 10);
         return restaurantRepository.findAll(limit).stream()
-                .map(RestaurantRegisterDTO::fromEntity).collect(Collectors.toList());
+                .map(RestaurantDTO::fromEntity).collect(Collectors.toList());
 
 
     }
 
-    public RestaurantRegisterDTO findRestaurantDetailById(Long restaurantId) {
-        return RestaurantRegisterDTO.fromEntity(restaurantRepository.findById(restaurantId).orElseThrow(
+    public List<RestaurantDTO> findAllRestaurantsOrderByRatings(int pageNo){
+        Pageable limit = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "rating"));
+        return restaurantRepository.findAll(limit)
+                .stream().map(RestaurantDTO::fromEntity).collect(Collectors.toList());
+    }
+
+    public RestaurantDTO findRestaurantDetailById(Long restaurantId) {
+        return RestaurantDTO.fromEntity(restaurantRepository.findById(restaurantId).orElseThrow(
                 () -> new IllegalStateException("해당 식당은 존재하지 않습니다.")
         ));
     }
+
+
 }

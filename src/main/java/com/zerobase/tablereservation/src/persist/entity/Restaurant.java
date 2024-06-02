@@ -20,6 +20,7 @@ public class Restaurant extends BaseEntity {
     private Long id;
 
     private String name;
+    private int rating;
     private String position;
     private String description;
 

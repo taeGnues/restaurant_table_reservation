@@ -1,6 +1,7 @@
 package com.zerobase.tablereservation.src.model;
 
 import com.zerobase.tablereservation.src.persist.entity.Restaurant;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,8 +10,11 @@ import lombok.Data;
 public class RestaurantRegisterDTO {
 
     private Long id;
+    @NotNull(message = "이름을 입력해주세요.")
     private String name;
+    @NotNull(message = "위치를 입력해주세요.")
     private String position;
+    @NotNull(message = "설명을 입력해주세요.")
     private String description;
 
     public Restaurant toEntity(){
@@ -18,15 +22,6 @@ public class RestaurantRegisterDTO {
                 .name(name)
                 .position(position)
                 .description(description)
-                .build();
-    }
-
-    public static RestaurantRegisterDTO fromEntity(Restaurant restaurant){
-        return RestaurantRegisterDTO.builder()
-                .id(restaurant.getId())
-                .name(restaurant.getName())
-                .position(restaurant.getPosition())
-                .description(restaurant.getDescription())
                 .build();
     }
 
