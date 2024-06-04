@@ -20,7 +20,7 @@ public class ReservationDTO {
                 .reservationId(m.getId())
                 .time(m.getTime())
                 .details(m.getDetails())
-                .complete(m.isComplete())
+                .complete(m.isVisit())
                 .build();
     }
 }

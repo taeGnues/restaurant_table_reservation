@@ -6,8 +6,6 @@ import lombok.*;
 import org.hibernate.envers.AuditOverride;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -23,7 +21,7 @@ public class Reservation extends BaseEntity{
 
     private LocalDateTime time;
     private String details;
-    private boolean complete;
+    private boolean visit;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -36,4 +34,8 @@ public class Reservation extends BaseEntity{
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "review_id")
     private Review review;
+
+    public void checkVisit(){
+        this.visit = true;
+    }
 }

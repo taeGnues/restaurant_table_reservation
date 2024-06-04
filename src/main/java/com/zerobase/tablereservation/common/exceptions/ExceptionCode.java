@@ -20,8 +20,13 @@ public enum ExceptionCode {
     MANAGER_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "이미 등록된 식당이 존재합니다."),
 
     RESTAURANT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 식당은 존재하지 않습니다."),
-    NOT_FIND_USER(HttpStatus.NOT_FOUND,"일치하는 유저가 없습니다."),
+    NOT_FIND_USER(HttpStatus.NOT_FOUND,"알 수 없는 유저의 접근입니다."),
     DUPLICATE_USERNAME(HttpStatus.BAD_REQUEST,"중복되는 username이 존재합니다."),
+
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예약이 존재하지 않습니다."),
+    RESERVATION_TOO_QUICK(HttpStatus.BAD_REQUEST, "최소 현재 시각에서 15분 이후부터 예약이 가능합니다."),
+    RESERVATION_ALREADY_DONE(HttpStatus.BAD_REQUEST, "이미 등록된 예약이 존재합니다."),
+    RESERVATION_TOO_LATE(HttpStatus.BAD_REQUEST, "예약 시간 10분 전까지 방문해야합니다."),
 
 
     /*

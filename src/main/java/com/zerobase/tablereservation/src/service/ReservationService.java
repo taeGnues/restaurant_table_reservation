@@ -1,5 +1,7 @@
 package com.zerobase.tablereservation.src.service;
 
+import com.zerobase.tablereservation.common.exceptions.BaseException;
+import com.zerobase.tablereservation.common.exceptions.ExceptionCode;
 import com.zerobase.tablereservation.src.model.ReservationDTO;
 import com.zerobase.tablereservation.src.model.ReservationRegisterDTO;
 import com.zerobase.tablereservation.src.model.UserVO;
@@ -31,24 +33,21 @@ public class ReservationService {
     public void registerReservation(ReservationRegisterDTO dto) {
         UserVO userVO = authService.getCurrentUserVO();
 
-
-        if (!checkReservationTimePossible(dto.getTime())){
-            throw new IllegalStateException("최소 현재 시각으로부터 15분 이후부터 예약이 가능합니다.");
-        }
-
+        checkAlreadyReservation(userVO.getUserId(), dto.getRestaurantId());
+        checkReservationTime(dto);
 
         Customer customer = customerRepository.findById(userVO.getUserId()).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 유저입니다.")
+                () -> new BaseException(ExceptionCode.NOT_FIND_USER)
         );
 
         Restaurant restaurant = restaurantRepository.findById(dto.getRestaurantId()).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 식당입니다.")
+                () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND)
         );
 
         Reservation reservation = Reservation.builder()
                 .time(dto.getTime())
                 .details(dto.getDetails())
-                .complete(false)
+                .visit(false)
                 .restaurant(restaurant)
                 .customer(customer)
                 .build();
@@ -57,8 +56,18 @@ public class ReservationService {
 
     }
 
-    // 주어진 예약시간이 현재 시각으로부터 15분 이후인지 확인함.
+    private void checkReservationTime(ReservationRegisterDTO dto) {
+        if (!checkReservationTimePossible(dto.getTime())){
+            throw new BaseException(ExceptionCode.RESERVATION_TOO_QUICK);
+        }
+    }
+    private void checkAlreadyReservation(Long customerId, Long restaurantId) {
+        if(reservationRepository.findByCustomer_IdAndRestaurant_IdAndVisit(customerId, restaurantId, false).isPresent()){
+            throw new BaseException(ExceptionCode.RESERVATION_ALREADY_DONE);
+        }
+    }
     private boolean checkReservationTimePossible(LocalDateTime time) {
+          // 주어진 예약시간이 현재 시각으로부터 15분 이후인지 확인함.
             return time.isAfter(LocalDateTime.now().plusMinutes(15));
     }
 
@@ -70,5 +79,23 @@ public class ReservationService {
                 .stream().map(ReservationDTO::fromEntity)
                 .collect(Collectors.toList());
 
+    }
+
+    @Transactional
+    public void checkVisitReservation(Long restaurantId) {
+        UserVO userVO = authService.getCurrentUserVO();
+
+        // 1. 현재 resId, userId로 예약이 존재하는지확인
+        Reservation reservation = reservationRepository.findByCustomer_IdAndRestaurant_IdAndVisit(userVO.getUserId(), restaurantId, false).orElseThrow(
+                () -> new BaseException(ExceptionCode.RESERVATION_NOT_FOUND)
+        );
+
+        // 2. 현재 시각이 예약 시간보다 10분 더 빠른지 확인
+        if(LocalDateTime.now().isAfter(reservation.getTime().minusMinutes(10))){
+            throw new BaseException(ExceptionCode.RESERVATION_TOO_LATE);
+        };
+
+        // 3. 모든 조건 충족 시 현재 예약 방문 상태로 바꾸기.
+        reservation.checkVisit();
     }
 }
