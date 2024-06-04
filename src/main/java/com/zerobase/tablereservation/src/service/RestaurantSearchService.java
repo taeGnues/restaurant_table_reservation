@@ -1,5 +1,7 @@
 package com.zerobase.tablereservation.src.service;
 
+import com.zerobase.tablereservation.common.exceptions.BaseException;
+import com.zerobase.tablereservation.common.exceptions.ExceptionCode;
 import com.zerobase.tablereservation.src.persist.RestaurantRepository;
 import com.zerobase.tablereservation.src.model.RestaurantDTO;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +52,7 @@ public class RestaurantSearchService {
 
     public RestaurantDTO findRestaurantDetailById(Long restaurantId) {
         return RestaurantDTO.fromEntity(restaurantRepository.findById(restaurantId).orElseThrow(
-                () -> new IllegalStateException("해당 식당은 존재하지 않습니다.")
+                () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND)
         ));
     }
 

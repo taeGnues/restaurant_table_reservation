@@ -1,5 +1,7 @@
 package com.zerobase.tablereservation.src.service;
 
+import com.zerobase.tablereservation.common.exceptions.BaseException;
+import com.zerobase.tablereservation.common.exceptions.ExceptionCode;
 import com.zerobase.tablereservation.src.model.RestaurantRegisterDTO;
 import com.zerobase.tablereservation.src.persist.ManagerRepository;
 import com.zerobase.tablereservation.src.persist.ReservationRepository;
@@ -28,8 +30,12 @@ public class RestaurantService {
     public void registerRestaurant(RestaurantRegisterDTO dto){
         UserVO userVO = authService.getCurrentUserVO();
 
+        if(restaurantRepository.findByManager_Id(userVO.getUserId()).isPresent()){
+            throw new BaseException(ExceptionCode.MANAGER_ALREADY_REGISTERED);
+        }
+
         Manager manager = managerRepository.findById(userVO.getUserId())
-                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FIND_USER));
 
         Restaurant restaurant = dto.toEntity();
         restaurant.designateManager(manager);
@@ -45,7 +51,7 @@ public class RestaurantService {
         UserVO userVO = authService.getCurrentUserVO();
 
         Restaurant restaurant = restaurantRepository.findByManager_Id(userVO.getUserId()).orElseThrow(
-                () -> new IllegalStateException("해당 유저가 갖고 있는 식당은 없습니다."));
+                () -> new BaseException(ExceptionCode.MANAGER_EMPTY_RESTAURANT));
 
         restaurant.update(dto);
     }
@@ -56,7 +62,7 @@ public class RestaurantService {
     public RestaurantDTO readRestaurant() {
         UserVO userVO = authService.getCurrentUserVO();
         Restaurant restaurant = restaurantRepository.findByManager_Id(userVO.getUserId()).orElseThrow(
-                () -> new IllegalStateException("해당 유저가 갖고 있는 식당은 없습니다."));
+                () -> new BaseException(ExceptionCode.MANAGER_EMPTY_RESTAURANT));
 
         return RestaurantDTO.fromEntity(restaurant);
     }
@@ -69,7 +75,7 @@ public class RestaurantService {
     public void deleteRestaurant(){
         UserVO userVO = authService.getCurrentUserVO();
         Restaurant restaurant = restaurantRepository.findByManager_Id(userVO.getUserId()).orElseThrow(
-            () -> new IllegalStateException("해당 유저가 갖고 있는 식당이 없습니다.")
+            () -> new BaseException(ExceptionCode.MANAGER_EMPTY_RESTAURANT)
         );
         // 해당 식당의 예약정보-리뷰들 모두 삭제.
         reservationRepository.deleteAllByRestaurant_Id(restaurant.getId());
