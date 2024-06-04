@@ -38,6 +38,8 @@ public class SecurityConfig {
                             .requestMatchers("/restaurant-manage/**").hasAuthority("MANAGER")
                             .requestMatchers("/restaurant-search/**").permitAll()
                             .requestMatchers("/reservation").hasAuthority("CUSTOMER")
+                            .requestMatchers("/reservation-manage").hasAuthority("MANAGER")
+                            .requestMatchers("/reservation/**").hasAuthority("CUSTOMER")
                             .anyRequest().denyAll()
 
             ).addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
