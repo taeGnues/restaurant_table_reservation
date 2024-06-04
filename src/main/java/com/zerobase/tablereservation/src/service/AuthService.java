@@ -2,6 +2,8 @@ package com.zerobase.tablereservation.src.service;
 
 import com.zerobase.tablereservation.common.constant.Auth;
 import com.zerobase.tablereservation.common.constant.Authority;
+import com.zerobase.tablereservation.common.exceptions.BaseException;
+import com.zerobase.tablereservation.common.exceptions.ExceptionCode;
 import com.zerobase.tablereservation.src.persist.CustomerRepository;
 import com.zerobase.tablereservation.src.persist.ManagerRepository;
 import com.zerobase.tablereservation.src.persist.entity.Customer;
@@ -42,6 +44,11 @@ public class AuthService implements UserDetailsService {
         roles.add(form.getRole());
 
         if(form.getRole().equals(Authority.ROLE_CUSTOMER.toString())){
+
+            if (customerRepository.findByUsername(form.getUsername()).isPresent()){
+                throw new BaseException(ExceptionCode.DUPLICATE_USERNAME);
+            }
+
             customerRepository.save(
                     Customer.builder()
                             .username(form.getUsername())
@@ -51,7 +58,13 @@ public class AuthService implements UserDetailsService {
                             .roles(roles)
                             .build()
             );
+
         } else if(form.getRole().equals(Authority.ROLE_MANAGER.toString())) {
+
+            if(managerRepository.findByUsername(form.getUsername()).isPresent()){
+                throw new BaseException(ExceptionCode.DUPLICATE_USERNAME);
+            }
+
             managerRepository.save(
                     Manager.builder()
                             .username(form.getUsername())
@@ -62,15 +75,15 @@ public class AuthService implements UserDetailsService {
                             .build()
             );
         } else{
-            throw new IllegalStateException("잘못된 role를 입력하셨습니다.");
+            throw new BaseException(ExceptionCode.WRONG_TYPE_ROLE);
         }
     }
 
     public Customer customerAuthentication(Auth.SignIn form) {
         var customer = customerRepository.findByUsername(form.getUsername())
-                .orElseThrow(()->new IllegalStateException("해당 username을 찾을 수 없습니다."));
+                .orElseThrow(()->new BaseException(ExceptionCode.CUSTOMER_NOT_FOUND_USERNAME));
         if(!passwordEncoder.matches(form.getPassword(), customer.getPassword())){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new BaseException(ExceptionCode.WRONG_PASSWORD);
         }
 
         return customer;
@@ -79,9 +92,9 @@ public class AuthService implements UserDetailsService {
     public Manager managerAuthentication(Auth.SignIn form) {
 
         var manager = managerRepository.findByUsername(form.getUsername())
-                .orElseThrow(()->new IllegalStateException("해당 username을 찾을 수 없습니다."));
+                .orElseThrow(()->new BaseException(ExceptionCode.MANAGER_NOT_FOUND_USERNAME));
         if(!passwordEncoder.matches(form.getPassword(), manager.getPassword())){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new BaseException(ExceptionCode.WRONG_PASSWORD);
         }
 
         return manager;
@@ -112,7 +125,7 @@ public class AuthService implements UserDetailsService {
                 }
             }
         }
-        throw new IllegalStateException("현재 로그인을 하지 않았거나 유저 정보가 존재하지 않습니다.");
+        throw new BaseException(ExceptionCode.NOT_FIND_USER);
     }
 
     /*
@@ -125,6 +138,6 @@ public class AuthService implements UserDetailsService {
             return customerOptional.get();
         }
 
-        return managerRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+        return managerRepository.findByUsername(username).orElseThrow(() -> new BaseException(ExceptionCode.NOT_FIND_USER));
     }
 }
