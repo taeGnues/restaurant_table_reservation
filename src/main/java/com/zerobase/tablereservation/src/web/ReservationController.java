@@ -32,5 +32,15 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.findAllReservations());
     }
 
+    /*
+    현재 고객이 키오스크에서 예약 확인 방문처리 및 검증
+     */
+    @PutMapping("/{restaurantId}")
+    public ResponseEntity<?> checkVisitReservation(@PathVariable Long restaurantId){
+        reservationService.checkVisitReservation(restaurantId);
+        return ResponseEntity.ok("방문에 성공했습니다.");
+    }
+
+
 
 }

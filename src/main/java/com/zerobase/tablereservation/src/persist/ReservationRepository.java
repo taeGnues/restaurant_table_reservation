@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     void deleteAllByRestaurant_Id(Long id);
+
+    Optional<Reservation> findByCustomer_IdAndRestaurant_IdAndVisit(Long customerId, Long restaurantId, boolean isVisit);
     List<Reservation> findAllByRestaurant_Id(Long id);
     List<Reservation> findAllByCustomer_Id(Long id);
 }
