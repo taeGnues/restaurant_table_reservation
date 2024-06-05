@@ -19,8 +19,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.time.LocalTime.now;
-
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
@@ -93,7 +91,7 @@ public class ReservationService {
         // 2. 현재 시각이 예약 시간보다 10분 더 빠른지 확인
         if(LocalDateTime.now().isAfter(reservation.getTime().minusMinutes(10))){
             throw new BaseException(ExceptionCode.RESERVATION_TOO_LATE);
-        };
+        }
 
         // 3. 모든 조건 충족 시 현재 예약 방문 상태로 바꾸기.
         reservation.checkVisit();

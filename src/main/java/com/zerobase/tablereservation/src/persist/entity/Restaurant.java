@@ -20,7 +20,7 @@ public class Restaurant extends BaseEntity {
     private Long id;
 
     private String name;
-    private int rating;
+    private double rating;
     private String position;
     private String description;
 
@@ -35,5 +35,9 @@ public class Restaurant extends BaseEntity {
         this.name = dto.getName();
         this.position = dto.getPosition();
         this.description = dto.getDescription();
+    }
+
+    public void evaluated(double rating){
+        this.rating = rating;
     }
 }

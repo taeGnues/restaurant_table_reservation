@@ -28,6 +28,10 @@ public enum ExceptionCode {
     RESERVATION_ALREADY_DONE(HttpStatus.BAD_REQUEST, "이미 등록된 예약이 존재합니다."),
     RESERVATION_TOO_LATE(HttpStatus.BAD_REQUEST, "예약 시간 10분 전까지 방문해야합니다."),
 
+    REVIEW_NEEDED_VISIT(HttpStatus.BAD_REQUEST, "리뷰를 작성하려면 먼저 해당 매장에 방문해야합니다."),
+    REVIEW_ALREADY_DONE(HttpStatus.BAD_REQUEST, "이미 작성된 리뷰가 존재합니다."),
+    REVIEW_EMPTY(HttpStatus.BAD_REQUEST, "리뷰가 존재하지 않습니다."),
+
 
     /*
      * 500 : DB, Server 오류

@@ -40,6 +40,7 @@ public class SecurityConfig {
                             .requestMatchers("/reservation").hasAuthority("CUSTOMER")
                             .requestMatchers("/reservation-manage").hasAuthority("MANAGER")
                             .requestMatchers("/reservation/**").hasAuthority("CUSTOMER")
+                            .requestMatchers("/review/**").hasAnyAuthority(new String[]{"CUSTOMER", "MANAGER"})
                             .anyRequest().denyAll()
 
             ).addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

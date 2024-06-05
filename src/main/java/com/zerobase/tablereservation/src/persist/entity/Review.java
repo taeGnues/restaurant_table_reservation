@@ -16,10 +16,13 @@ public class Review extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private int rating;
     private String content;
 
     @OneToOne(mappedBy = "review", fetch = FetchType.LAZY)
     private Reservation reservation;
 
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
 }

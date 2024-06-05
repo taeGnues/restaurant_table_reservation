@@ -38,4 +38,8 @@ public class Reservation extends BaseEntity{
     public void checkVisit(){
         this.visit = true;
     }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
 }
