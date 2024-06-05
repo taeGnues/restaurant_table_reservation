@@ -9,7 +9,7 @@ import lombok.Data;
 public class RestaurantDTO {
 
     private Long id;
-    private int rating;
+    private double rating;
     private String name;
     private String position;
     private String description;
