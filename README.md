@@ -15,6 +15,7 @@ Database : MySQL
 인증/인가 구현 : Spring Security & JWT
 데이터 유효성 검증 : Java Bean Validation
 
+Unit Test & Integration Test : JUnit5
 API 테스트 : POSTMAN
 문서화 및 형상 관리 도구 : Notion, Git
 ```
@@ -34,15 +35,10 @@ API 테스트 : POSTMAN
 | 리뷰 삭제                               | 고객, 점장 |  O   |
 
 ### ERD
-
 ![erd](./erd.png)
 
-### 서비스 구성도
-
-
-
-### API 명세서 (SWAGGER)
-swagger 참조.
+### API 명세서 (POSTMAN)
+https://documenter.getpostman.com/view/27906012/2sA3QzbUhU
 
 ### Folder Structure
 - `src`: 메인 로직
