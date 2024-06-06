@@ -31,6 +31,11 @@ public class AuthController {
         return ResponseEntity.ok("회원가입에 성공했습니다.");
     }
 
+    /*
+    로그인은 customer 로그인과 manager 로그인을 구분한다.
+    로그인은 password와 username에 의해 이뤄지며,
+    인증 성공 시, username과 role을 담은 token을 발급한다.
+     */
     @PostMapping("/customer-signin")
     public ResponseEntity<?> customerSignIn(@Valid @RequestBody Auth.SignIn form){
         var member = authService.customerAuthentication(form);

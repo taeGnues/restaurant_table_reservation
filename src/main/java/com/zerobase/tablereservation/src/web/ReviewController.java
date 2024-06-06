@@ -38,12 +38,23 @@ public class ReviewController {
     }
 
     /*
-    review 제거
+    review 제거 (MANAGER)
      */
     @DeleteMapping
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<?> deleteReview(@RequestBody ReviewDeleteDTO dto){
         reviewService.deleteReview(dto);
+        reviewService.changeAverageRating(dto.getRestaurantId());
+        return ResponseEntity.ok("리뷰 삭제에 성공했습니다.");
+    }
+
+    /*
+    review 제거 (CUSTOMER)
+     */
+    @DeleteMapping("/mine")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<?> deleteReviewByCustomer(@RequestBody ReviewDeleteDTO dto){
+        reviewService.deleteReviewByCustomer(dto);
         reviewService.changeAverageRating(dto.getRestaurantId());
         return ResponseEntity.ok("리뷰 삭제에 성공했습니다.");
     }

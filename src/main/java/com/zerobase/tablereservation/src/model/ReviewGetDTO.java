@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ReviewGetDTO {
+
     Long reviewId;
     int rating;
     String content;

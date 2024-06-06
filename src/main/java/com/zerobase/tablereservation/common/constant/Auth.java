@@ -3,14 +3,16 @@ package com.zerobase.tablereservation.common.constant;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.lang.NonNull;
-
+/*
+회원 가입 및 로그인 시 사용하는 DTO다.
+ */
 public class Auth {
 
     @Data
     public static class SignIn{
-        @NonNull
+        @NotNull(message = "username을 입력해주세요.")
         private String username;
-        @NonNull
+        @NotNull(message = "password를 입력해주세요.")
         private String password;
     }
 

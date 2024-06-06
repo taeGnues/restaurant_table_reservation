@@ -22,7 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
+    /*
+    Spring Security 관련 모듈이다.
+     */
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,7 +33,7 @@ public class SecurityConfig {
             .cors(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // rest-api를 위한 세팅
-            .authorizeHttpRequests(
+            .authorizeHttpRequests( // 권한 허용을 설정한다.
                     auth -> auth
                             .requestMatchers("/auth/**").permitAll()
                             .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
@@ -42,7 +44,7 @@ public class SecurityConfig {
                             .requestMatchers("/reservation/**").hasRole("CUSTOMER")
                             .requestMatchers("/review/**").hasAnyRole("CUSTOMER", "MANAGER")
                             .anyRequest().denyAll()
-            ).addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            ).addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // jwtAuthenticationFilter를 사용한다.
 
 
         return http.build();
