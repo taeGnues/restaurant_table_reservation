@@ -18,6 +18,9 @@ public class ReservationManagerService {
     private final RestaurantRepository restaurantRepository;
     private final ReservationRepository reservationRepository;
 
+    /*
+    모든 예약을 조회하고, DTO로 변환해 리턴해준다.
+     */
     public List<ReservationDTO> findAllReservations() {
         UserVO userVO = authService.getCurrentUserVO();
 

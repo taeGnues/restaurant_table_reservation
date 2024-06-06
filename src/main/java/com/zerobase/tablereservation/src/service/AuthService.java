@@ -79,6 +79,11 @@ public class AuthService implements UserDetailsService {
         }
     }
 
+    /*
+    로그인에 대한 인증은 Customer, Manager 구분되어 진행된다.
+    비밀번호 불일치 시 에러를 발생시킨다.
+     */
+
     public Customer customerAuthentication(Auth.SignIn form) {
         var customer = customerRepository.findByUsername(form.getUsername())
                 .orElseThrow(()->new BaseException(ExceptionCode.CUSTOMER_NOT_FOUND_USERNAME));

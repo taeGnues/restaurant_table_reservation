@@ -25,6 +25,10 @@ public class RestaurantService {
 
     /*
     식당 등록하기
+    1. 해당 유저가 이미 등록한 식당이 있는지 확인한다.
+    2. 해당 유저가 존재하는지 확인한다.
+    3. 식당을 생성하고, 해당 식당과 유저를 매핑해준다.
+    4. 식당을 저장한다.
      */
     @Transactional
     public void registerRestaurant(RestaurantRegisterDTO dto){
@@ -45,6 +49,8 @@ public class RestaurantService {
 
     /*
     식당 수정하기
+    1. 현재 로그인한 유저 정보로 식당을 조회하고,
+    2. 해당 식당 정보를 수정한다.
      */
     @Transactional
     public void updateRestaurant(RestaurantRegisterDTO dto){
@@ -78,6 +84,11 @@ public class RestaurantService {
             () -> new BaseException(ExceptionCode.MANAGER_EMPTY_RESTAURANT)
         );
         // 해당 식당의 예약정보-리뷰들 모두 삭제.
+        // 1. 예약과 연관된 리뷰들을 모두 관계를 해제한다.
+        reservationRepository.findAllByRestaurant_Id(restaurant.getId())
+                .forEach(m->m.setReview(null));
+
+        // 2. 예약을 모두 지운다.
         reservationRepository.deleteAllByRestaurant_Id(restaurant.getId());
 
         // 해당 식당 삭제

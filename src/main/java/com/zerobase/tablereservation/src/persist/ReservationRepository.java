@@ -22,4 +22,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Optional<Reservation> findByIdAndCustomer_Id(Long reservationId, Long customerId);
 
     Optional<Reservation> findByReview_IdAndRestaurant_Id(Long reviewId, Long restaurantId);
+
+    Optional<Reservation> findByReview_IdAndCustomer_Id(Long reviewId, Long customerId);
 }

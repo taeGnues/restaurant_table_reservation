@@ -30,18 +30,19 @@ public class ReviewService {
 
     /*
     리뷰 등록
+    1. 해당 예약의 visit이 true인지 확인한다.
+    2. 해당 예약에 대해 이미 리뷰가 있는지 확인
+    3. 리뷰객체 생성 후 연관관계 맺어준다.
      */
     @Transactional
     public void registerReview(ReviewDTO dto) {
         Reservation reservation = getReservation(dto.getReservationId());
 
-        // 2. 해당 예약의 visit이 true인지 확인
         checkAlreadyVisitedTrue(reservation);
 
-        // 3. 해당 예약에 대해 이미 리뷰가 있는지 확인
+
         checkAlreadyHadReview(reservation);
 
-        // 4. 리뷰 등록
         Review review = Review.builder()
                 .rating(dto.getRating())
                 .content(dto.getContent())
@@ -55,26 +56,29 @@ public class ReviewService {
 
     /*
     식당 평점 변경
+    1. restaurantId로 모든 reservationId 찾기
+    2. reservationId에 해당하는 review들 찾기
+    3. 해당 review들을 바탕으로 평균구하기 (만약 review가 없다면, 0이다.)
      */
     @Transactional
     public void changeAverageRating(Long restaurantId){
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(()->new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-        // 5-1. restaurantId로 모든 reservationId 찾기
         List<Reservation> reservations = reservationRepository.findAllByRestaurant_IdWithFetch(restaurantId);
 
-        // 5-2. reservationId에 해당하는 review들 찾기
+
         List<Review> reviews = reservations.stream().map(Reservation::getReview).toList();
 
         double rating_avg = 0;
 
         if(!reviews.isEmpty()){
-            // 6. 해당 review들을 바탕으로 평균구하기
+
             rating_avg = reviews.stream().mapToInt(Review::getRating).average().orElseThrow(
                     () -> new BaseException(ExceptionCode.REVIEW_EMPTY)
             );
         }
+
         restaurant.evaluated(rating_avg);
     }
 
@@ -94,40 +98,59 @@ public class ReviewService {
 
     /*
     리뷰 수정
+    1. 예약 번호로 리뷰를 찾는다.
+    2. review를 update로 수정한다.
      */
     @Transactional
     public void updateReview(ReviewDTO dto) {
         Reservation reservation = getReservation(dto.getReservationId());
 
-        // 2. 예약 번호로 리뷰 찾기.
         Review review = reviewRepository.findByReservationId(reservation.getId())
                 .orElseThrow(()->new BaseException(ExceptionCode.REVIEW_EMPTY));
 
-        // 3. review 수정하기
         review.update(dto);
     }
 
     /*
-    리뷰 삭제
+    리뷰 삭제 (MANAGER)
+    1. 해당 주인의 식당 찾기
+    2. 해당 리뷰가 찾기.
+    3. 해당 리뷰가 자기 자신의 식당에 달린 리뷰인지 확인하기. (Reservation에 reviewId & restaurantId가 존재하지 않으면 끝.)
+    4. 해당 예약의 리뷰를 null로 설정한다. (orphanRemoval 설정에 의해 자동으로 하위 review는 삭제된다)
      */
     @Transactional
     public void deleteReview(ReviewDeleteDTO dto) {
         UserVO userVO = authService.getCurrentUserVO();
 
-        // 1. 해당 주인의 식당 찾기.
         Restaurant restaurant = restaurantRepository.findByManager_Id(userVO.getUserId())
                 .orElseThrow(()->new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-        log.info("{} ->", restaurant.getId());
 
-        // 2, 해당 리뷰가 찾기.
         Review review = reviewRepository.findById(dto.getReviewId())
                 .orElseThrow(() -> new BaseException(ExceptionCode.REVIEW_EMPTY));
 
-        log.info("{} ->", review.getId());
 
-        // 3. 해당 리뷰가 자기 자신의 식당에 달린 리뷰인지 확인하기. (Reservation에 reviewId & restaurantId가 존재하지 않으면 끝.)
         Reservation reservation = reservationRepository.findByReview_IdAndRestaurant_Id(review.getId(), restaurant.getId())
+                .orElseThrow(() -> new BaseException(ExceptionCode.REVIEW_NON_AUTHORITY_DELETE));
+
+        reservation.setReview(null);
+    }
+
+    /*
+    자신의 리뷰 삭제 (CUSTOMER)
+    1. 해당 리뷰 찾기.
+    2. 해당 리뷰가 자기가 작성한 리뷰인지 확인하기. (Reservation에 reviewId & customerId가 존재하지 않으면 끝.)
+    3. 해당 예약의 리뷰를 null로 설정한다. (orphanRemoval 설정에 의해 자동으로 하위 review는 삭제된다)
+     */
+    @Transactional
+    public void deleteReviewByCustomer(ReviewDeleteDTO dto) {
+        UserVO userVO = authService.getCurrentUserVO();
+
+
+        Review review = reviewRepository.findById(dto.getReviewId())
+                .orElseThrow(() -> new BaseException(ExceptionCode.REVIEW_EMPTY));
+
+        Reservation reservation = reservationRepository.findByReview_IdAndCustomer_Id(review.getId(), userVO.getUserId())
                 .orElseThrow(() -> new BaseException(ExceptionCode.REVIEW_NON_AUTHORITY_DELETE));
 
         reservation.setReview(null);
@@ -140,6 +163,9 @@ public class ReviewService {
                 .orElseThrow(()->new BaseException(ExceptionCode.RESERVATION_NOT_FOUND));
     }
 
+    /*
+    해당 식당의 모든 리뷰 조회하기
+     */
     public List<ReviewGetDTO> getReviews(Long restaurantId) {
         List<Reservation> reservations = reservationRepository.findAllByRestaurant_IdWithFetch(restaurantId);
 

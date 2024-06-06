@@ -2,6 +2,7 @@ package com.zerobase.tablereservation.common.exceptions;
 
 import lombok.Getter;
 
+// 기본적으로 사용할 CustomException이다.
 @Getter
 public class BaseException extends RuntimeException{
     private final ExceptionCode exceptionCode;
