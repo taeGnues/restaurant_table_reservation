@@ -1,6 +1,13 @@
 # Restaurant Table Reservation Service
 식당 테이블을 예약하는 서비스입니다.
 
+## 목차
+- [ 사용된 기술 ](#사용된-기술)
+- [ 주요 기능 ](#주요-기능)
+- [ ERD ](#erd)
+- [ API 명세서 ](#api-명세서-postman)
+- [ Folder Structure ](#folder-structure)
+- [ Structure ](#structure)
 
 ## ✨Description
 - - -
