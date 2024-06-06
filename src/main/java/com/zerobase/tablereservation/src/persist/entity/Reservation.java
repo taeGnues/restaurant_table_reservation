@@ -31,9 +31,10 @@ public class Reservation extends BaseEntity{
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "review_id")
     private Review review;
+    // 리뷰의 존재 이전에 예약이 존재할 수 없음.... 따라서 예약삭제->리뷰삭제가 강요되지 않음.
 
     public void checkVisit(){
         this.visit = true;

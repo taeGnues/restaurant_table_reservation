@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Slf4j
 @Configuration
+@EnableMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -35,14 +35,13 @@ public class SecurityConfig {
                     auth -> auth
                             .requestMatchers("/auth/**").permitAll()
                             .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
-                            .requestMatchers("/restaurant-manage/**").hasAuthority("MANAGER")
+                            .requestMatchers("/restaurant-manage/**").hasRole("MANAGER")
                             .requestMatchers("/restaurant-search/**").permitAll()
-                            .requestMatchers("/reservation").hasAuthority("CUSTOMER")
-                            .requestMatchers("/reservation-manage").hasAuthority("MANAGER")
-                            .requestMatchers("/reservation/**").hasAuthority("CUSTOMER")
-                            .requestMatchers("/review/**").hasAnyAuthority(new String[]{"CUSTOMER", "MANAGER"})
+                            .requestMatchers("/reservation").hasRole("CUSTOMER")
+                            .requestMatchers("/reservation-manage").hasRole("MANAGER")
+                            .requestMatchers("/reservation/**").hasRole("CUSTOMER")
+                            .requestMatchers("/review/**").hasAnyRole("CUSTOMER", "MANAGER")
                             .anyRequest().denyAll()
-
             ).addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 
