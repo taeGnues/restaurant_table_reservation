@@ -5,9 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ReviewRegisterDTO {
-    Long reservationId;
+public class ReviewDeleteDTO {
+    Long reviewId;
     Long restaurantId;
-    int rating;
-    String content;
 }

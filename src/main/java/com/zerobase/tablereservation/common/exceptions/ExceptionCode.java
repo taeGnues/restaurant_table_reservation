@@ -31,6 +31,7 @@ public enum ExceptionCode {
     REVIEW_NEEDED_VISIT(HttpStatus.BAD_REQUEST, "리뷰를 작성하려면 먼저 해당 매장에 방문해야합니다."),
     REVIEW_ALREADY_DONE(HttpStatus.BAD_REQUEST, "이미 작성된 리뷰가 존재합니다."),
     REVIEW_EMPTY(HttpStatus.BAD_REQUEST, "리뷰가 존재하지 않습니다."),
+    REVIEW_NON_AUTHORITY_DELETE(HttpStatus.BAD_REQUEST, "삭제할 권한이 없습니다."),
 
 
     /*
